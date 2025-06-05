@@ -14,4 +14,13 @@
         <exec.mainClass>presentacion.Main</exec.mainClass>
     </properties>
     <name>P1_ADB_252389</name>
+      <dependencies>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.31</version>
+        </dependency>
+    </dependencies>
+    
 </project>

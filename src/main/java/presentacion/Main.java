@@ -1,16 +1,25 @@
 package presentacion;
 
+import DTO.GuardarAlumnoDTO;
 import dominio.Estudiante;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import persistencia.AlumnoDAO;
+import persistencia.ConexionBD;
+import persistencia.IAlumnoDAO;
+import persistencia.IConexionBD;
+import persistencia.PersistenciaException;
 
 public class Main extends JFrame {
 
-    public static void main(String[] args) {
-        new Main().setVisible(true);
+    public static void main(String[] args) throws PersistenciaException {
+        //pruebas para la conexion de DAO
+        IConexionBD conexion = new ConexionBD();
+        IAlumnoDAO alumnoDTO = new AlumnoDAO(conexion);
+        alumnoDTO.guardar(new GuardarAlumnoDTO("Angel", "Flores","Jimenez"));
     }
 
     public Main() {

@@ -1,3 +1,10 @@
-C:\Users\angel\OneDrive\Escritorio\DB-AVD\demo\src\main\java\dominio\Estudiante.java
-C:\Users\angel\OneDrive\Escritorio\DB-AVD\demo\src\main\java\presentacion\Main.java
-C:\Users\angel\OneDrive\Escritorio\DB-AVD\demo\src\main\java\presentacion\TablaPaginada.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\persistencia\AlumnoDAO.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\persistencia\IAlumnoDAO.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\presentacion\Main.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\dominio\Estudiante.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\presentacion\TablaPaginada.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\DTO\GuardarAlumnoDTO.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\dominio\AlumnoDominio.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\persistencia\ConexionBD.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\persistencia\IConexionBD.java
+C:\Users\Laboratorios\Desktop\P1_ADB\src\main\java\persistencia\PersistenciaException.java
