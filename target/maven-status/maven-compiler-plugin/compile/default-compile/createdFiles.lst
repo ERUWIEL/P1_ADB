@@ -5,12 +5,14 @@ dominio\AlumnoDominio.class
 presentacion\TablaPaginada$PTabla.class
 persistencia\PersistenciaException.class
 presentacion\TablaPaginada$PTabla$2.class
+DTO\FiltroTablaAlumnoDTO.class
+DTO\TablaAlumnoDTO.class
 presentacion\TablaPaginada$PTabla$ButtonEditor.class
 presentacion\TablaPaginada$PTabla$1.class
 presentacion\TablaPaginada.class
 persistencia\IAlumnoDAO.class
+DTO\ModificarAlumnoDTO.class
 persistencia\IConexionBD.class
-dominio\Estudiante.class
 persistencia\ConexionBD.class
 persistencia\AlumnoDAO.class
 presentacion\Main.class
