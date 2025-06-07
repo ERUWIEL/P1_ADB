@@ -3,6 +3,12 @@ C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\DTO\FiltroTabl
 C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\DTO\GuardarAlumnoDTO.java
 C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\DTO\ModificarAlumnoDTO.java
 C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\DTO\TablaAlumnoDTO.java
+C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\fachada\AlumnoFachada.java
+C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\fachada\IAlumnoFachada.java
+C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\negocio\AlumnoNegocio.java
+C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\negocio\IAlumnoNegocio.java
+C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\negocio\NegocioException.java
+C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\persistencia\AlumnoConsultas.java
 C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\persistencia\AlumnoDAO.java
 C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\persistencia\ConexionBD.java
 C:\Users\angel\OneDrive\Escritorio\P1_ADB_v1\P1_ADB\src\main\java\persistencia\IAlumnoDAO.java

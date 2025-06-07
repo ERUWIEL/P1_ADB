@@ -14,10 +14,4 @@ public interface IAlumnoDAO {
     AlumnoDominio buscarPorId(int id) throws PersistenciaException;
     AlumnoDominio modificar(ModificarAlumnoDTO alumno) throws PersistenciaException;
     AlumnoDominio eliminar(int id) throws PersistenciaException;
-    
-    /**
-     * modificar <- dto return AlumnoTablaDTO
-     * buscarTabla <- filtros return AlumnoTablaDTO
-     * eliminar <- id return AlumnoDominio
-     */
 }

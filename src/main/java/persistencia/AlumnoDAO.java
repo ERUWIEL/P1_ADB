@@ -1,4 +1,3 @@
-
 package persistencia;
 
 import DTO.*;
@@ -16,7 +15,6 @@ import java.util.List;
  *
  * @author Laboratorios
  */
-
 public class AlumnoDAO implements IAlumnoDAO {
 
     private final IConexionBD conexion;
@@ -40,41 +38,28 @@ public class AlumnoDAO implements IAlumnoDAO {
     @Override
     public AlumnoDominio guardar(GuardarAlumnoDTO alumno) throws PersistenciaException {
         try {
-            Connection connection = this.conexion.crearConexion(); // coneccion con la BD
+            AlumnoDominio alumnoBuscado;
+            try (Connection connection = this.conexion.crearConexion(); PreparedStatement preparedStatement = connection.prepareStatement(AlumnoConsultas.INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, alumno.getNombre());
+                preparedStatement.setString(2, alumno.getApellidoPaterno());
+                preparedStatement.setString(3, alumno.getApellidoMaterno());
 
-            //aplicacion de la operacion SQL
-            String query = """
-                           INSERT INTO alumnos(nombre,apellidoPaterno,apellidoMaterno) VALUES(?,?,?);
-                           """;
-            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, alumno.getNombre());
-            preparedStatement.setString(2, alumno.getApellidoPaterno());
-            preparedStatement.setString(3, alumno.getApellidoMaterno());
-
-            // evaluacion de resultados
-            int filasAfectadas = preparedStatement.executeUpdate();
-            if (filasAfectadas == 0) {
-                throw new PersistenciaException("no se inserto alumno");
+                int filasAfectadas = preparedStatement.executeUpdate();
+                if (filasAfectadas == 0) {
+                    throw new PersistenciaException("no se inserto alumno");
+                }
+                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                    alumnoBuscado = null;
+                    while (resultSet.next()) {
+                        int id = resultSet.getInt(1);
+                        alumnoBuscado = this.buscarPorId(id);
+                    }
+                }
             }
-
-            //formato de salida
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            AlumnoDominio alumnoBuscado = null;
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                alumnoBuscado = this.buscarPorId(id);
-            }
-
-            //cierre de canales
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-
             if (alumnoBuscado == null) {
-                throw new PersistenciaException("No se encontró el alumno guardado");
+                throw new PersistenciaException("no se encontro el alumno guardado");
             }
             return alumnoBuscado;
-
         } catch (SQLException ex) {
             throw new PersistenciaException("error al guardar " + ex.getMessage());
         }
@@ -90,31 +75,22 @@ public class AlumnoDAO implements IAlumnoDAO {
     @Override
     public AlumnoDominio buscarPorId(int id) throws PersistenciaException {
         try {
-            //conexion y setteo de variables
-            Connection connection = this.conexion.crearConexion();
-            String query = """
-                           SELECT * FROM alumnos WHERE id = ?;
-                           """;
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, id);
-            //ejecucion y resultados
-            ResultSet resultSet = preparedStatement.executeQuery();
-            AlumnoDominio alumno = null;
-            while (resultSet.next()) {
-                alumno = this.convertirAlumnoDominio(resultSet);
+            AlumnoDominio alumno;
+            try (Connection connection = this.conexion.crearConexion(); PreparedStatement preparedStatement = connection.prepareStatement(AlumnoConsultas.SELECT_ID_QUERY)) {
+                preparedStatement.setInt(1, id);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    alumno = null;
+                    while (resultSet.next()) {
+                        alumno = this.convertirAlumnoDominio(resultSet);
+                    }
+                }
             }
-
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-
             if (alumno == null) {
-                throw new PersistenciaException("No se encontró el alumno con id " + id);
+                throw new PersistenciaException("no se encontro el alumno con id " + id);
             }
             return alumno;
-
         } catch (SQLException ex) {
-            throw new PersistenciaException("Ocurrion un error en leer un alumno " + ex.getMessage());
+            throw new PersistenciaException("ocurrion un error en leer un alumno " + ex.getMessage());
         }
     }
 
@@ -128,33 +104,21 @@ public class AlumnoDAO implements IAlumnoDAO {
     @Override
     public AlumnoDominio modificar(ModificarAlumnoDTO alumno) throws PersistenciaException {
         try {
-            // precondiciones
             this.buscarPorId(alumno.getId());
 
-            //conexion y setteo de variables
-            Connection connection = this.conexion.crearConexion();
-            String query = """
-                       UPDATE alumnos
-                       SET 
-                           nombre = ?,
-                           apellidoPaterno = ?,
-                           apellidoMaterno = ?
-                       WHERE id = ?;
-                       """;
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, alumno.getNombre());
-            preparedStatement.setString(2, alumno.getApellidoPaterno());
-            preparedStatement.setString(3, alumno.getApellidoMaterno());
-            preparedStatement.setInt(4, alumno.getId());
-            //ejecucion y resultados
-            int filasAfectadas = preparedStatement.executeUpdate();
-            if (filasAfectadas == 0) {
-                throw new PersistenciaException("alumno no modificado");
+            AlumnoDominio alumnoActualizado;
+            try (Connection connection = this.conexion.crearConexion(); PreparedStatement preparedStatement = connection.prepareStatement(AlumnoConsultas.UPDATE_QUERY)) {
+                preparedStatement.setString(1, alumno.getNombre());
+                preparedStatement.setString(2, alumno.getApellidoPaterno());
+                preparedStatement.setString(3, alumno.getApellidoMaterno());
+                preparedStatement.setInt(4, alumno.getId());
+
+                int filasAfectadas = preparedStatement.executeUpdate();
+                if (filasAfectadas == 0) {
+                    throw new PersistenciaException("alumno no modificado");
+                }
+                alumnoActualizado = this.buscarPorId(alumno.getId());
             }
-            //retorno del nuevo valor
-            AlumnoDominio alumnoActualizado = this.buscarPorId(alumno.getId());
-            preparedStatement.close();
-            connection.close();
             return alumnoActualizado;
 
         } catch (SQLException ex) {
@@ -172,42 +136,32 @@ public class AlumnoDAO implements IAlumnoDAO {
     @Override
     public AlumnoDominio eliminar(int id) throws PersistenciaException {
         try {
-            // precondiciones
             AlumnoDominio alumno = this.buscarPorId(id);
 
-            //conexion y setteo de variables
-            Connection connection = this.conexion.crearConexion();
-            String query = """
-                        UPDATE alumnos
-                        SET 
-                            nombre = ?,
-                            apellidoPaterno = ?,
-                            apellidoMaterno = ?,
-                            estaActivo = ?,
-                            estaEliminado = ?
-                        WHERE id = ?;
-                           """;
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, alumno.getNombre());
-            preparedStatement.setString(2, alumno.getApellidoPaterno());
-            preparedStatement.setString(3, alumno.getApellidoMaterno());
-            preparedStatement.setBoolean(4, false);
-            preparedStatement.setBoolean(5, true);
-            preparedStatement.setInt(6, id);
-            
-            //ejecucion y resultados
-            int filasAfectadas = preparedStatement.executeUpdate();
-            if (filasAfectadas == 0) {
-                throw new PersistenciaException("alumno no eliminado");
+            try (Connection connection = this.conexion.crearConexion(); PreparedStatement preparedStatement = connection.prepareStatement(AlumnoConsultas.SET_ELIMINADO_QUERY)) {
+                preparedStatement.setString(1, alumno.getNombre());
+                preparedStatement.setString(2, alumno.getApellidoPaterno());
+                preparedStatement.setString(3, alumno.getApellidoMaterno());
+                preparedStatement.setBoolean(4, false);
+                preparedStatement.setBoolean(5, true);
+                preparedStatement.setInt(6, id);
+
+                //ejecucion y resultados
+                int filasAfectadas = preparedStatement.executeUpdate();
+                if (filasAfectadas == 0) {
+                    throw new PersistenciaException("alumno no eliminado");
+                }
             }
-            preparedStatement.close();
-            connection.close();
             return alumno;
         } catch (SQLException ex) {
             throw new PersistenciaException("error al eliminar " + ex.getMessage());
         }
     }
 
+    
+    
+    
+    
     /**
      * metodo que permite buscar tabla
      *
@@ -218,28 +172,21 @@ public class AlumnoDAO implements IAlumnoDAO {
     @Override
     public TablaAlumnoDTO buscarTabla(FiltroTablaAlumnoDTO filtros) throws PersistenciaException {
         try {
-            Connection connection = this.conexion.crearConexion();
-            String query = """
-                       SELECT * FROM alumnos
-                       WHERE (nombre LIKE ? OR apellidoPaterno LIKE ? OR apellidoMaterno LIKE ?)
-                       AND estaEliminado = false
-                       LIMIT ? OFFSET ?;
-                       """;
             String patronBusqueda = "%" + filtros.getPatron() + "%";
-            
             List<AlumnoDominio> alumnos = new ArrayList<>();
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, patronBusqueda);
-            preparedStatement.setString(2, patronBusqueda);
-            preparedStatement.setString(3, patronBusqueda);
-            preparedStatement.setInt(4, filtros.getLimit());
-            preparedStatement.setInt(5, filtros.getOffset());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                alumnos.add(this.convertirAlumnoDominio(resultSet));
+            
+            try (Connection connection = this.conexion.crearConexion(); PreparedStatement preparedStatement = connection.prepareStatement(AlumnoConsultas.CONSULTAR_FILTRO);) {
+                preparedStatement.setString(1, patronBusqueda);
+                preparedStatement.setString(2, patronBusqueda);
+                preparedStatement.setString(3, patronBusqueda);
+                preparedStatement.setInt(4, filtros.getLimit());
+                preparedStatement.setInt(5, filtros.getOffset());
+                
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    alumnos.add(this.convertirAlumnoDominio(resultSet));
+                }
             }
-            preparedStatement.close();
-            connection.close();
             return new TablaAlumnoDTO(alumnos);
         } catch (SQLException ex) {
             throw new PersistenciaException("error al consultar " + ex.getMessage());

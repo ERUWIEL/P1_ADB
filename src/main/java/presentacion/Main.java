@@ -1,37 +1,27 @@
 package presentacion;
 
 import DTO.FiltroTablaAlumnoDTO;
-import DTO.GuardarAlumnoDTO;
-import DTO.ModificarAlumnoDTO;
+
 import DTO.TablaAlumnoDTO;
 import dominio.AlumnoDominio;
+import fachada.AlumnoFachada;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import negocio.NegocioException;
 import persistencia.*;
 
 public class Main extends JFrame {
 
-    public static void main(String[] args) throws PersistenciaException {
-        new Main().setVisible(true);
-        //pruebas para la conexion de DAO
-
-
-        /**
-         *         TablaAlumnoDTO tabla = alumnoDTO.buscarTabla(new FiltroTablaAlumnoDTO(5, 15, "Samiraaa"));
-        tabla.getAlumnos().forEach(p -> {
-            System.out.println(p.getId() + ": " + p.getNombre() + " " + p.getApellidoPaterno() + " " + p.getApellidoMaterno());
-        });
-         * AlumnoDominio alumno = alumnoDTO.modificar(new ModificarAlumnoDTO(1,
-         * "Angelika", "Soto", "Guamo")); alumnoDTO.guardar(new
-         * GuardarAlumnoDTO("Samiraaa", "Cassiopeiaaa","Martinez"));
-         * AlumnoDominio alumno = alumnoDTO.eliminar(1);
-         * System.out.println("ELIMINADO"); System.out.println(alumno.getId() +
-         * ": " + alumno.getNombre() + " " + alumno.getApellidoPaterno() + " " +
-         * alumno.getApellidoMaterno());
-         */
+    public static void main(String[] args) throws NegocioException {
+        AlumnoFachada fachada = new AlumnoFachada();
+        try{
+            fachada.modificar();
+        }catch(NegocioException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     public Main() throws PersistenciaException {
